@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:sensors/sensors.dart';
+import 'dart:async'; // for stream
 
+// main function
 void main() {
-  runApp(MyApp());
+  runApp(MyAppBrain());
 }
 
-class MyApp extends StatelessWidget {
+
+// stateful widget
+class MyAppBrain extends StatefulWidget {
+  @override
+  _MyAppBrainState createState() => _MyAppBrainState();
+}
+
+class _MyAppBrainState extends State<MyAppBrain> {
+
+  AccelerometerEvent event;
+  StreamSubscription accel;
+
+
+  startTimer()
+  {
+    if (accel == null)
+      {
+        accel = accelerometerEvents.listen((AccelerometerEvent temp) {
+          setState(() {
+            event=temp;
+          });
+        });
+      }
+    else
+      {
+        accel.resume();
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,9 +58,18 @@ class MyApp extends StatelessWidget {
         ),
         backgroundColor: Colors.teal[200],
         body: SafeArea(
-          child: Column(),
+          child: Column(
+            children: <Widget>[
+              Text('x: ${(event?.x ?? 0).toStringAsFixed(3)}'),
+              Text('y: ${(event?.y ?? 0).toStringAsFixed(3)}'),
+              Text('z: ${(event?.z ?? 0).toStringAsFixed(3)}'),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton.extended(
+          onPressed: (){
+            startTimer();
+          },
           icon: Icon(
             Icons.play_arrow,
             size: 30.0,
