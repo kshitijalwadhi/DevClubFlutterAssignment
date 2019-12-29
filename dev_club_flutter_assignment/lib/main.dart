@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
-import 'dart:async'; // for stream
+import 'dart:async'; // for stream of values
 
 // main function
 void main() {
@@ -71,18 +71,19 @@ class _MyAppBrainState extends State<MyAppBrain> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Get the circle in the centre and hold it for 1 sec'),
-            ),
             Stack(
               children: <Widget>[
                 // empty container to initialise the size of the stack
                 Container(
                   width: width,
-                  height: height/2,
+                  height: height/1.5,
                 ),
+                Positioned(
+                  top: 10,
+                  left: 15,
 
+                  child: Text('Get the circle in the centre and hold it for 1 sec', style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),),
+                ),
                 // the outer (fixed) circle
                 Positioned(
                   top: 50,
@@ -115,16 +116,21 @@ class _MyAppBrainState extends State<MyAppBrain> {
 
                 // the moving circle (position determined by accelerometer)
                 //Positioned(),
+                // text for accelerometer values
+                Positioned(
+                  top: 370.0,
+                  left: width/2 -45,
+                  child: Text('x: ${(event?.x ?? 0).toStringAsFixed(1)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, ),),
+                ),
+                Positioned(
+                  top: 405.0,
+                  left: width/2 - 45,
+                  child: Text('y: ${(event?.y ?? 0).toStringAsFixed(1)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, )),
+                ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 150.0),
-              child:  Text('x: ${(event?.x ?? 0).toStringAsFixed(3)}'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child:  Text('y: ${(event?.y ?? 0).toStringAsFixed(3)}'),
-            ),
+
+
 
           ],
         ),
