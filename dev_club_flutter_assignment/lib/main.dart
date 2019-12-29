@@ -82,6 +82,7 @@ class _MyAppBrainState extends State<MyAppBrain> {
                   width: width,
                   height: height/2,
                 ),
+
                 // the outer (fixed) circle
                 Positioned(
                   top: 50,
@@ -96,8 +97,22 @@ class _MyAppBrainState extends State<MyAppBrain> {
                     ),
                   ),
                 ),
+
                 // the target/ inner circle (also fixed)
-                //Positioned(),
+                Positioned(
+                  top: 125,
+                  left: (width - 100) / 2,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black, width: 2.5),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                ),
+
                 // the moving circle (position determined by accelerometer)
                 //Positioned(),
               ],
