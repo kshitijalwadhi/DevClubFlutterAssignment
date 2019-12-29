@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
 import 'dart:async'; // for stream of values
+import 'package:url_launcher/url_launcher.dart'; // for url handling
 
 // main function
 void main() {
@@ -133,7 +134,7 @@ class _MyAppBrainState extends State<MyAppBrain> {
                 // empty container to initialise the size of the stack
                 Container(
                   width: width,
-                  height: height/1.5,
+                  height: height/1.2,
                 ),
                 Positioned(
                   top: 10,
@@ -141,7 +142,7 @@ class _MyAppBrainState extends State<MyAppBrain> {
 
                   child: Text('Get the circle in the centre and hold it for 1 sec', style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),),
                 ),
-                
+
                 // the outer (fixed) circle
                 Positioned(
                   top: 50,
@@ -197,6 +198,21 @@ class _MyAppBrainState extends State<MyAppBrain> {
                   top: 405.0,
                   left: width/2 - 45,
                   child: Text('y: ${(event?.y ?? 0).toStringAsFixed(2)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, )),
+                ),
+
+                Positioned(
+                  top: height - 280,
+                  right: 25,
+                  child: Text('made by- Kshitij Alwadhi', style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),),
+                ),
+                Positioned(
+                  top: height - 250,
+                  right: 25,
+                  child: InkWell(
+                      child: Text('kshitijalwadhi.github.io', style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: Colors.deepPurpleAccent,
+                      decoration: TextDecoration.underline),),
+                      onTap: () => launch('https://kshitijalwadhi.github.io',),
+                  ),
                 ),
               ],
             ),
