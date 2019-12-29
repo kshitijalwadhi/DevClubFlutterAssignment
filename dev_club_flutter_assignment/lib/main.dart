@@ -7,6 +7,7 @@ void main() {
   runApp(GetWidthHeight());
 }
 
+// for giving MediaQuery.of() a context (MaterialApp) to decide width and height of device
 class GetWidthHeight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class _MyAppBrainState extends State<MyAppBrain> {
   int count = 0;
   Color color = Colors.green;
 
-  //for starting the reading of data
+  //for starting the reading of data and game evaluation
   startTimer()
   {
     if (accel == null)
@@ -51,30 +52,55 @@ class _MyAppBrainState extends State<MyAppBrain> {
       {
         accel.resume();
       }
-
+    //for pausing the game after hold successfully for 1 sec and also call for color change
     if (timer == null || !timer.isActive) {
       timer = Timer.periodic(Duration(milliseconds: 200), (_) {
         if (count > 3) {
           pauseTimer();
         } else {
-          //setColor(event);
+          setColor();
           setPosition(event);
         }
       });
     }
   }
 
+  //changing the color as per requirement
+  setColor() {
+    var xDelta = (event.x *10).abs();
+    var yDelta = (event.y *10).abs();
+
+    if(xDelta<3 && yDelta<3){
+      setState(() {
+        color= Colors.greenAccent;
+        count+=1;
+      });
+    }
+    else{
+      setState(() {
+        color = Colors.red[300];
+        count =0;
+      });
+    }
+  }
+
+
+  //pause the timer
   pauseTimer(){
     timer.cancel();
+    accel.pause();
+    setState(() {
+      count =0;
+      color= Colors.green;
+    });
   }
 
   setPosition(AccelerometerEvent event){
     setState((){
-      left=event.x*10;
+      left=-event.x*10;
       top=event.y*10;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +141,7 @@ class _MyAppBrainState extends State<MyAppBrain> {
 
                   child: Text('Get the circle in the centre and hold it for 1 sec', style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),),
                 ),
+                
                 // the outer (fixed) circle
                 Positioned(
                   top: 50,
@@ -153,22 +180,23 @@ class _MyAppBrainState extends State<MyAppBrain> {
                     height: 100,
                     width: 100,
                     decoration: BoxDecoration(
-                      color: Colors.red[300],
+                      color: color,
                       border: Border.all(color: Colors.red, width: 2.5),
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                 ),
+
                 // text for accelerometer values
                 Positioned(
                   top: 370.0,
                   left: width/2 -45,
-                  child: Text('x: ${(event?.x ?? 0).toStringAsFixed(1)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, ),),
+                  child: Text('x: ${(event?.x ?? 0).toStringAsFixed(2)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, ),),
                 ),
                 Positioned(
                   top: 405.0,
                   left: width/2 - 45,
-                  child: Text('y: ${(event?.y ?? 0).toStringAsFixed(1)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, )),
+                  child: Text('y: ${(event?.y ?? 0).toStringAsFixed(2)}', style: TextStyle(fontSize: 30.0, letterSpacing: 2.0, )),
                 ),
               ],
             ),
