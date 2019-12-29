@@ -28,7 +28,14 @@ class _MyAppBrainState extends State<MyAppBrain> {
   AccelerometerEvent event;
   // for getting stream of data from sensor
   StreamSubscription accel;
-  //for storing the height and width of the device
+  // timer variable
+  Timer timer;
+
+  double top = 0;
+  double left=0;
+  int count = 0;
+  Color color = Colors.green;
+
   //for starting the reading of data
   startTimer()
   {
@@ -44,7 +51,31 @@ class _MyAppBrainState extends State<MyAppBrain> {
       {
         accel.resume();
       }
+
+    if (timer == null || !timer.isActive) {
+      timer = Timer.periodic(Duration(milliseconds: 200), (_) {
+        if (count > 3) {
+          pauseTimer();
+        } else {
+          //setColor(event);
+          setPosition(event);
+        }
+      });
+    }
   }
+
+  pauseTimer(){
+    timer.cancel();
+  }
+
+  setPosition(AccelerometerEvent event){
+    setState((){
+      left=event.x*10;
+      top=event.y*10;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -115,7 +146,19 @@ class _MyAppBrainState extends State<MyAppBrain> {
                 ),
 
                 // the moving circle (position determined by accelerometer)
-                //Positioned(),
+                Positioned(
+                  top: 125 + top,
+                  left: left + (width-100)/2,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.red[300],
+                      border: Border.all(color: Colors.red, width: 2.5),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                ),
                 // text for accelerometer values
                 Positioned(
                   top: 370.0,
